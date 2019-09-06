@@ -79,7 +79,11 @@ def read_corpus(folderpath, log_level=5):
     
     return document_list
 
-if __name__ == "__main__":
-    print("***Testing Document class***")
-    data = input("give data input: ")
-    document = Document(raw_data=data)
+def read_query(query):
+    return Document(raw_data=query)
+
+
+# if __name__ == "__main__":
+#     print("***Testing Document class***")
+#     data = input("give data input: ")
+#     document = Document(raw_data=data)
