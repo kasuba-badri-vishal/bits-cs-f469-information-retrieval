@@ -29,10 +29,13 @@ if __name__=="__main__":
             else:
                 q = read_query(query)
                 print()
+                doc_num = 0
                 for d in df.search(q,corpus):
                     if d[0]!=0:
+                        doc_num+=1
                         print(corpus[d[1]].filepath)
-                print()
+                print("\nNumber of documents returned: ",doc_num,"\n")
+
     else:
         # if no pickle files are found
 
