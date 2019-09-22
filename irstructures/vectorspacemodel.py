@@ -55,7 +55,7 @@ class VectorSpaceModel(DataFrame):
         Returns the cosine or the dot product of two vectors(query and document or
         document and document)
         """
-        return np.dot(a,b)
+        return np.dot(a,b)/(a.shape[0]*b.shape[0])
 
     def search(self, qdoc, corpus):
         """

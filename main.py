@@ -1,40 +1,50 @@
 from irstructures.document import Document, read_corpus, read_query
 from irstructures.logger import Logger
-from irstructures.invertedindex import InvertedIndex
 from irstructures.vectorspacemodel import VectorSpaceModel
 import pandas as pd
 import numpy as np
 import pickle
 import os
+import time
+
+def start_search(df, corpus):
+    while True:
+        query = input("Enter query: ")
+        if query == "EXIT":
+            break
+        else:
+            q = read_query(query)
+            print()
+            doc_num = 0
+            start_time = time.time()
+            for d in df.search(q, corpus):
+                if d[0]!=0:
+                    doc_num+=1
+                    print(str(doc_num)+")",corpus[d[1]].filepath)
+                    if doc_num==10:
+                        break
+            end_time = time.time()
+            print("\nNumber of documents returned: ",doc_num,"\n")
+            print("Time taken: {0}s\n".format(end_time-start_time))
+
 
 if __name__=="__main__":
 
     print("\n***Program started***\n")
 
-    if("vectorspace" in os.listdir(".")) and ("corpus_pickle" in os.listdir(".")):
+    if("vectorspace_pickle" in os.listdir(".")) and ("corpus_pickle" in os.listdir(".")):
         # if pickle files are found
 
         # loading vectorspacemodel
-        vectorspace_file = open("vectorspace", "rb")
+        vectorspace_file = open("vectorspace_pickle", "rb")
         df = pickle.load(vectorspace_file)
         vectorspace_file.close()
         # loading corpus
         corpus_file = open("corpus_pickle", "rb")
         corpus = pickle.load(corpus_file)
         corpus_file.close()
-        while True:
-            query = input("Enter query: ")
-            if query == "EXIT":
-                break
-            else:
-                q = read_query(query)
-                print()
-                doc_num = 0
-                for d in df.search(q,corpus):
-                    if d[0]!=0:
-                        doc_num+=1
-                        print(corpus[d[1]].filepath)
-                print("\nNumber of documents returned: ",doc_num,"\n")
+        
+        start_search(df, corpus)
 
     else:
         # if no pickle files are found
@@ -64,7 +74,7 @@ if __name__=="__main__":
         df = VectorSpaceModel(corpus, collection_freq)
 
         # writing vectorspacemodel and corpus to pickle files
-        vectorspace_file = open("vectorspace", "wb")
+        vectorspace_file = open("vectorspace_pickle", "wb")
         pickle.dump(df, vectorspace_file)
         vectorspace_file.close()
 
@@ -72,13 +82,6 @@ if __name__=="__main__":
         pickle.dump(corpus, corpus_file)
         corpus_file.close()
 
-        while True:
-            query = input("Enter query: ")
-            if query == "EXIT":
-                break
-            else:
-                q = read_query(query)
-                print(df.search(q,corpus))
-
+        start_search(df, corpus)
     print("\n***End of program***\n")
     
